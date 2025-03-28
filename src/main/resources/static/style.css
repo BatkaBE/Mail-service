@@ -1,0 +1,106 @@
+/* Funny CSS for Send Email Page */
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-image: url("./shrek-shrek-rizz.gif");
+        background-size:50%;
+background-attachment: fixed;
+    text-align: center;
+    padding: 50px;
+    color: white;
+    animation: background-shift 5s infinite alternate;
+}
+  /* Button styling */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Image styling */
+        #the-rock {
+            display: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            width: 300px; /* Adjust the size as needed */
+            height: auto;
+        }
+
+        /* Hover effect */
+        button:hover + #the-rock {
+            display: block;
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        /* Animation for fade in and out */
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+
+h1 {
+    font-size: 50px;
+    text-shadow: 3px 3px 0px #000, 5px 5px 10px yellow;
+}
+
+/* Funky Input Fields */
+input, textarea {
+    font-size: 18px;
+    padding: 10px;
+    border: 3px dashed yellow;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: black;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Make inputs wobble when clicked */
+input:focus, textarea:focus {
+    border-color: lime;
+    transform: rotate(-2deg);
+}
+
+/* Funny Send Button */
+button {
+width:200px;
+background-color: transparent;
+    border:none;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.2s ease-in-out;
+    animation: shake 1s infinite alternate;
+}
+#shrek{
+width:100%;
+}
+/* Make button shake continuously */
+@keyframes shake {
+    0% { transform: rotate(1deg); }
+    100% { transform: rotate(-1deg); }
+}
+
+/* When user hovers, make button explode */
+button:hover {
+
+    border-color: blue;
+    transform: scale(1.2) rotate(10deg);
+    text-shadow: 2px 2px 0px black;
+}
+
+/* Funny Footer */
+footer {
+    margin-top: 50px;
+    font-size: 16px;
+    color: yellow;
+    text-shadow: 1px 1px 0px black;
+}
