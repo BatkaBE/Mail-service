@@ -1,7 +1,5 @@
 package com.example.fileManager.service;
 
-import com.example.fileManager.dto.EmailRequest;
-import com.example.fileManager.repository.EmailRequestRepository;
 import jakarta.activation.DataSource;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +21,9 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class EmailService {
-    private final EmailRequestRepository emailRequestRepository;
     private final JavaMailSender javaMailSender;
     private final S3Service s3Service;
 
-    public EmailRequest saveEmailRequest(EmailRequest emailRequest) {
-        return emailRequestRepository.save(emailRequest);
-    }
 
     public void sendShrekEmailWithAttachments(String to, String subject, String text) throws MessagingException, IOException, jakarta.mail.MessagingException {
         List<S3Object> files = s3Service.listFilesFromS3();
