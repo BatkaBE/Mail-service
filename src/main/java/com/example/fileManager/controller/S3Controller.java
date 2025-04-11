@@ -35,4 +35,13 @@ public class S3Controller {
     public ResponseEntity<List<String>> listFiles() {
         return ResponseEntity.ok(s3Service.listFiles());
     }
+    @DeleteMapping("/delete/{filename}")
+    public ResponseEntity<String> deleteFile(@PathVariable String filename) {
+        try {
+            s3Service.deleteFile(filename);
+            return ResponseEntity.ok("File deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("File deletion failed: " + e.getMessage());
+        }
+    }
 }

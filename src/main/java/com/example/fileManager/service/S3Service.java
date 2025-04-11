@@ -56,4 +56,12 @@ public class S3Service {
         ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
         return s3Object;
     }
+
+    public void deleteFile(String filename) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(filename)
+                .build();
+        s3Client.deleteObject(deleteObjectRequest);
+    }
 }
