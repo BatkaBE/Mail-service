@@ -35,6 +35,7 @@ public class S3Controller {
     public ResponseEntity<List<String>> listFiles() {
         return ResponseEntity.ok(s3Service.listFiles());
     }
+
     @DeleteMapping("/delete/{filename}")
     public ResponseEntity<String> deleteFile(@PathVariable String filename) {
         try {
