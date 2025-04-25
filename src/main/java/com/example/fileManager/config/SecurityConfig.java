@@ -13,12 +13,13 @@ import java.util.Arrays;
 @Configuration
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())  // Disable CSRF for APIs
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/email/**").permitAll()  // Allow public access to /email
+                        .requestMatchers("/email/**", "/s3/**").permitAll()  // Allow public access to /email
                         .anyRequest().authenticated()  // Secure other endpoints
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));

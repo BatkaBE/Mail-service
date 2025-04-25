@@ -1,7 +1,9 @@
 package com.example.fileManager.controller;
 
 import com.example.fileManager.dto.EmailRequest;
+import com.example.fileManager.model.EmailRecord;
 import com.example.fileManager.service.EmailService;
+import com.example.fileManager.repository.EmailRecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,6 +20,7 @@ import java.io.IOException;
 public class EmailController {
 
     private final EmailService emailService;
+    private final EmailRecordRepository emailRecordRepository;
 
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequest emailRequest) {
@@ -47,5 +51,16 @@ public class EmailController {
             return ResponseEntity.status(500)
                     .body("Email sending failed: Unexpected error - " + e.getMessage());
         }
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<EmailRecord>> getEmailHistory() {
+        return ResponseEntity.ok(emailRecordRepository.findAllByOrderBySentDateDesc());
+    }
+
+    @GetMapping("/history/{email}")
+    public ResponseEntity<List<EmailRecord>> getEmailHistoryForAddress(
+            @PathVariable String email) {
+        return ResponseEntity.ok(emailRecordRepository.findByToAddress(email));
     }
 }

@@ -1,5 +1,7 @@
 package com.example.fileManager.service;
 
+import com.example.fileManager.model.EmailRecord;
+import com.example.fileManager.repository.EmailRecordRepository;
 import jakarta.activation.DataSource;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -9,30 +11,40 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import jakarta.mail.util.ByteArrayDataSource;
-
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import javax.mail.MessagingException;
-import java.io.InputStream;
-import java.util.List;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender javaMailSender;
     private final S3Service s3Service;
+    private final EmailRecordRepository emailRecordRepository;
 
+    public void sendShrekEmailWithAttachments(String to, String subject, String text)
+            throws MessagingException, IOException, jakarta.mail.MessagingException {
 
-    public void sendShrekEmailWithAttachments(String to, String subject, String text) throws MessagingException, IOException, jakarta.mail.MessagingException {
-        List<S3Object> files = s3Service.listFilesFromS3();
+        EmailRecord record = new EmailRecord();
+        record.setToAddress(to);
+        record.setSubject(subject);
+        record.setSentDate(new Date());
 
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-        messageHelper.setFrom("batkabata42@gmail.com");
-        messageHelper.setTo(to);
-        messageHelper.setSubject(subject);
+        try {
+            List<S3Object> files = s3Service.listFilesFromS3();
+            record.setAttachments(files.stream().map(S3Object::key).collect(Collectors.toList()));
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+            messageHelper.setFrom("batkabata42@gmail.com");
+            messageHelper.setTo(to);
+            messageHelper.setSubject(subject);
 
 
         String cssStyles = "<style>" +
@@ -79,7 +91,13 @@ public class EmailService {
             messageHelper.addInline(contentId, dataSource);
         }
 
-        javaMailSender.send(mimeMessage);
+            record.setSuccess(true);
+        } catch (Exception e) {
+            record.setSuccess(false);
+            record.setErrorMessage(e.getMessage());
+            throw e;
+        } finally {
+            emailRecordRepository.save(record);
+        }
     }
-
 }
